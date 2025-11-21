@@ -1,0 +1,77 @@
+---
+import { getStoreConfig } from "../../lib/strapi";
+
+const storeConfig = await getStoreConfig();
+const storeName =
+  storeConfig?.storeName || import.meta.env.PUBLIC_STORE_NAME || "Mi Tienda";
+const storeDescription =
+  storeConfig?.description ||
+  import.meta.env.PUBLIC_STORE_DESCRIPTION ||
+  "Tu tienda de confianza";
+const storeEmail =
+  storeConfig?.email || import.meta.env.PUBLIC_STORE_EMAIL || "info@tienda.com";
+const storePhone =
+  storeConfig?.whatsappNumber ||
+  import.meta.env.PUBLIC_WHATSAPP_NUMBER ||
+  "34123456789";
+---
+
+<!-- Footer -->
+<footer class="bg-gray-800 text-white mt-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Info de la tienda -->
+      <div>
+        <h3 class="text-lg font-bold mb-4">{storeName}</h3>
+        <p class="text-gray-300">
+          {storeDescription}
+        </p>
+      </div>
+
+      <!-- Enlaces -->
+      <div>
+        <h3 class="text-lg font-bold mb-4">Enlaces</h3>
+        <ul class="space-y-2 text-gray-300">
+          <li>
+            <a href="/" class="hover:text-white transition-colors">Inicio</a>
+          </li>
+          <li>
+            <a href="/productos" class="hover:text-white transition-colors"
+              >Productos</a
+            >
+          </li>
+          <li>
+            <a href="/categorias" class="hover:text-white transition-colors"
+              >Categorías</a
+            >
+          </li>
+          <li>
+            <a href="/contacto" class="hover:text-white transition-colors"
+              >Contacto</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <!-- Contacto -->
+      <div>
+        <h3 class="text-lg font-bold mb-4">Contacto</h3>
+        <ul class="space-y-2 text-gray-300">
+          <li>
+            Email: {storeEmail}
+          </li>
+          <li>
+            WhatsApp: +{storePhone}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+      <p>
+        &copy; {new Date().getFullYear()}
+        {storeName}. Todos los derechos reservados.
+      </p>
+    </div>
+  </div>
+</footer>

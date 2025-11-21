@@ -1,0 +1,79 @@
+---
+import { getStrapiMedia } from "../../lib/strapi";
+import { AddToCartButton } from "../react/AddToCartButton";
+import type { Product } from "../../lib/strapi";
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+
+// Validar que product tenga los datos requeridos
+if (!product?.name || !product?.price) {
+  console.warn("ProductCard: producto inválido recibido", product);
+  throw new Error("Product debe tener name y price");
+}
+
+const { name, price, slug, image } = product;
+// Obtener la primera imagen si es un array
+const imageUrl = getStrapiMedia(image?.[0]?.url);
+
+// Preparar datos para el botón de añadir al carrito
+const cartItem = {
+  id: product.id,
+  name,
+  price,
+  slug,
+  image: imageUrl,
+};
+---
+
+<!--
+  COMPONENTE: ProductCard
+  
+  ¿Qué hace?
+  - Muestra una tarjeta con la información del producto
+  - Tiene un enlace a la página de detalle
+  - Incluye un botón para añadir al carrito (React Island)
+  
+  ¿Por qué Astro?
+  - El contenido de la tarjeta es estático (imagen, nombre, precio)
+  - No necesita interactividad excepto el botón
+  - Se renderiza en el servidor para mejor SEO y performance
+-->
+<div
+  class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow"
+>
+  <!-- Imagen del producto -->
+  <a href={`/productos/${slug}`}>
+    <div class="aspect-square overflow-hidden bg-gray-100">
+      <img
+        src={imageUrl}
+        alt={name}
+        class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+        loading="lazy"
+      />
+    </div>
+  </a>
+
+  <!-- Información del producto -->
+  <div class="p-4">
+    <a href={`/productos/${slug}`}>
+      <h3
+        class="text-lg font-semibold text-gray-800 hover:text-primary-600 transition-colors mb-2"
+      >
+        {name}
+      </h3>
+    </a>
+
+    <div class="flex items-center justify-between mb-4">
+      <span class="text-2xl font-bold text-primary-600">
+        €{price.toFixed(2)}
+      </span>
+    </div>
+
+    <!-- Botón de añadir al carrito (React Island) -->
+    <AddToCartButton client:only="react" product={cartItem} />
+  </div>
+</div>

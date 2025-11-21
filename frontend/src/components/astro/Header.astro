@@ -1,0 +1,53 @@
+---
+import { CartWrapper } from "../react/CartWrapper";
+import { getStoreConfig } from "../../lib/strapi";
+
+const storeConfig = await getStoreConfig();
+const storeName =
+  storeConfig?.storeName || import.meta.env.PUBLIC_STORE_NAME || "Mi Tienda";
+---
+
+<!-- Header -->
+<header class="bg-white shadow-sm sticky top-0 z-30">
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <!-- Logo / Nombre de la tienda -->
+      <a href="/" class="flex items-center">
+        <span class="text-2xl font-bold text-primary-600">{storeName}</span>
+      </a>
+
+      <!-- Navegación -->
+      <div class="hidden md:flex items-center space-x-8">
+        <a
+          href="/"
+          class="text-gray-700 hover:text-primary-600 transition-colors"
+        >
+          Inicio
+        </a>
+        <a
+          href="/productos"
+          class="text-gray-700 hover:text-primary-600 transition-colors"
+        >
+          Productos
+        </a>
+        <a
+          href="/categorias"
+          class="text-gray-700 hover:text-primary-600 transition-colors"
+        >
+          Categorías
+        </a>
+        <a
+          href="/contacto"
+          class="text-gray-700 hover:text-primary-600 transition-colors"
+        >
+          Contacto
+        </a>
+      </div>
+
+      <!-- Carrito (React Island) -->
+      <div class="flex items-center">
+        <CartWrapper client:only="react" />
+      </div>
+    </div>
+  </nav>
+</header>

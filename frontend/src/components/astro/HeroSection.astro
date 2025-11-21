@@ -1,0 +1,24 @@
+---
+import { getStoreConfig } from "../../lib/strapi";
+
+const storeConfig = await getStoreConfig();
+const storeName =
+  storeConfig?.storeName || import.meta.env.PUBLIC_STORE_NAME || "Mi Tienda";
+---
+
+<section class="bg-gradient-to-r from-primary-600 to-primary-800 text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+    <h1 class="text-4xl md:text-6xl font-bold mb-6">
+      Bienvenido a {storeName}
+    </h1>
+    <p class="text-xl md:text-2xl mb-8 text-primary-100">
+      Descubre nuestros productos de calidad
+    </p>
+    <a
+      href="/productos"
+      class="inline-block bg-white text-primary-600 font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition-colors"
+    >
+      Ver Catálogo
+    </a>
+  </div>
+</section>
