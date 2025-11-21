@@ -133,11 +133,11 @@ export interface StoreConfig {
   id: number;
   storeName: string;
   description: string;
-  logo?: Array<{
+  logo?: {
     id: number;
     name: string;
     url: string;
-  }>;
+  };
   email: string;
   phone: string;
   whatsappNumber: string;
