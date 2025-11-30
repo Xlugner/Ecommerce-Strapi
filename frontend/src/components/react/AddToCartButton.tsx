@@ -1,44 +1,50 @@
-import { useState } from 'react';
-import { useCart } from './CartContext';
+import { useState, useEffect } from 'react';
+import { addCartItem, isCartOpen } from '../react/CartStore'; 
 import type { CartItem } from '../../lib/types';
 
 interface AddToCartButtonProps {
   product: Omit<CartItem, 'quantity'>;
 }
 
-/**
- * COMPONENTE: AddToCartButton
- * 
- * ¿Qué hace?
- * - Botón para añadir un producto al carrito
- * - Muestra feedback visual cuando se añade
- * - Usa el contexto del carrito para actualizar el estado global
- * 
- * ¿Por qué es un React Island?
- * - Interactividad (click)
- * - Animación y feedback visual
- * - Actualiza estado global sin recargar
- */
 export const AddToCartButton = ({ product }: AddToCartButtonProps) => {
-  const { addToCart } = useCart();
   const [isAdded, setIsAdded] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleClick = () => {
-    addToCart(product);
-    setIsAdded(true);
+    // 1. Añadimos al store global de Nanostores
+    addCartItem(product);
+    
+    // 2. Opcional: Abrir el carrito automáticamente al añadir
+    isCartOpen.set(true);
 
-    // Reset del feedback después de 2 segundos
+    // 3. Feedback visual local
+    setIsAdded(true);
     setTimeout(() => {
       setIsAdded(false);
     }, 2000);
   };
+
+  if (!mounted) {
+    return (
+      <button
+        disabled
+        className="w-full py-3 px-6 rounded-lg font-bold bg-gray-300 text-gray-500 cursor-not-allowed"
+      >
+        Cargando...
+      </button>
+    );
+  }
 
   return (
     <button
       onClick={handleClick}
       disabled={isAdded}
       className={`
-        w-full py-3 px-6 rounded-lg font-bold transition-all
+        w-full py-3 px-6 rounded-lg font-bold transition-all flex items-center justify-center
         ${isAdded
           ? 'bg-green-500 text-white'
           : 'bg-primary-600 hover:bg-primary-700 text-white'

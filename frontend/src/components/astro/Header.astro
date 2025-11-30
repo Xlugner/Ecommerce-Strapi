@@ -1,5 +1,6 @@
 ---
 import { CartWrapper } from "../react/CartWrapper";
+import MobileMenu from "../react/MobileMenu";
 import { getStoreConfig, getStrapiMedia } from "../../lib/strapi";
 
 const storeConfig = await getStoreConfig();
@@ -8,15 +9,16 @@ const storeName =
 const logoUrl = getStrapiMedia(storeConfig?.logo?.url);
 ---
 
-<!-- Header -->
-<header class="bg-white shadow-sm sticky top-0 z-30">
-  <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between items-center h-16">
-      <!-- Logo / Nombre de la tienda -->
+<!-- Header Azul -->
+<header class="bg-primary-500 sticky top-0 z-50 shadow-md">
+  <nav class="max-w-7xl mx-auto px-4 py-3">
+    <div class="flex justify-between items-center">
+      
+      <!-- Logo -->
       <a href="/" class="flex items-center gap-3">
         {
           logoUrl && logoUrl !== "/placeholder.jpg" && logoUrl.trim() ? (
-            <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center flex-shrink-0">
+            <div class="w-12 h-12 rounded-full overflow-hidden bg-white flex items-center justify-center flex-shrink-0">
               <img
                 src={logoUrl}
                 alt={storeName}
@@ -25,50 +27,124 @@ const logoUrl = getStrapiMedia(storeConfig?.logo?.url);
               />
             </div>
           ) : (
-            <div class="w-12 h-12 rounded-lg bg-primary-600 flex items-center justify-center flex-shrink-0">
-              <span class="text-white font-bold text-lg">
-                {storeName.charAt(0).toUpperCase()}
-              </span>
+            <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center flex-shrink-0">
+              <svg class="w-8 h-8 text-primary-500" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+              </svg>
             </div>
           )
         }
-        <span class="text-xl font-bold text-primary-600 hidden sm:inline">
+        <!-- Nombre solo en desktop -->
+        <span class="text-white font-bold text-lg hidden sm:inline">
           {storeName}
         </span>
       </a>
 
-      <!-- Navegación -->
-      <div class="hidden md:flex items-center space-x-8">
+      <!-- Navegación Desktop (centrada) -->
+      <nav class="hidden md:flex items-center space-x-8">
         <a
           href="/"
-          class="text-gray-700 hover:text-primary-600 transition-colors"
+          class="text-white hover:text-gray-200 font-medium transition-colors"
         >
           Inicio
         </a>
         <a
           href="/productos"
-          class="text-gray-700 hover:text-primary-600 transition-colors"
+          class="text-white hover:text-gray-200 font-medium transition-colors"
         >
           Productos
         </a>
         <a
           href="/categorias"
-          class="text-gray-700 hover:text-primary-600 transition-colors"
+          class="text-white hover:text-gray-200 font-medium transition-colors"
         >
           Categorías
         </a>
         <a
           href="/contacto"
-          class="text-gray-700 hover:text-primary-600 transition-colors"
+          class="text-white hover:text-gray-200 font-medium transition-colors"
         >
           Contacto
         </a>
-      </div>
+      </nav>
 
-      <!-- Carrito (React Island) -->
-      <div class="flex items-center">
-        <CartWrapper client:only="react" />
+      <!-- Iconos de la derecha -->
+      <div class="flex items-center gap-2">
+        
+        <!-- Icono de Búsqueda -->
+        <button 
+          id="searchButton"
+          class="text-white hover:text-gray-200 transition-colors p-2 rounded-lg hover:bg-primary-600"
+          aria-label="Buscar"
+        >
+          <svg class="w-6 h-6" fill="none" stroke-Linecap="round" stroke-Linejoin="round" stroke-Width="2" viewBox="0 0 24 24" stroke="currentColor">
+            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </button>
+
+        <!-- Menú Hamburguesa (solo móvil) -->
+        <div class="md:hidden">
+          <MobileMenu client:load />
+        </div>
+
+        <!-- Carrito (solo desktop, el móvil usa botón flotante) -->
+        <div class="hidden md:block">
+          <CartWrapper client:load />
+        </div>
       </div>
     </div>
   </nav>
 </header>
+
+<!-- Barra de búsqueda desplegable (oculta por defecto) -->
+<div id="searchBar" class="bg-white shadow-md overflow-hidden transition-all duration-300 max-h-0">
+  <div class="max-w-7xl mx-auto px-4 py-4">
+    <div class="relative">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Buscar productos..."
+        class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+      />
+      <svg class="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke-Linecap="round" stroke-Linejoin="round" stroke-Width="2" viewBox="0 0 24 24" stroke="currentColor">
+        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Toggle barra de búsqueda
+  const searchButton = document.getElementById('searchButton');
+  const searchBar = document.getElementById('searchBar');
+  const searchInput = document.getElementById('searchInput');
+
+  if (searchButton && searchBar && searchInput) {
+    searchButton.addEventListener('click', () => {
+      const isOpen = searchBar.style.maxHeight && searchBar.style.maxHeight !== '0px';
+      
+      if (isOpen) {
+        searchBar.style.maxHeight = '0px';
+      } else {
+        searchBar.style.maxHeight = '100px';
+        // Focus en el input después de un pequeño delay para que la animación se vea bien
+        setTimeout(() => searchInput.focus(), 300);
+      }
+    });
+
+    // Buscar productos (puedes conectar esto con tu lógica)
+    searchInput.addEventListener('input', (e) => {
+      const query = (e.target as HTMLInputElement).value;
+      console.log('Buscando:', query);
+      // Aquí puedes implementar la búsqueda real
+    });
+
+    // Cerrar al hacer clic fuera
+    document.addEventListener('click', (e) => {
+      if (!(searchBar as HTMLElement).contains(e.target as Node) && 
+          !(searchButton as HTMLElement).contains(e.target as Node)) {
+        searchBar.style.maxHeight = '0px';
+      }
+    });
+  }
+</script>

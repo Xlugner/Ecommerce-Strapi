@@ -4,19 +4,33 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Colores personalizables por tienda
         primary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
+          50: '#E6F2FF',
+          100: '#CCE5FF',
+          200: '#99CCFF',
+          300: '#66B2FF',
+          400: '#3399FF',
+          500: '#0066CC',  // Color principal
+          600: '#0052A3',
+          700: '#003D7A',
+          800: '#002952',
+          900: '#001429',
         },
+        turquoise: {
+          50: '#E6F7FA',
+          100: '#CCEFF5',
+          200: '#99DFEB',
+          300: '#66CFE1',
+          400: '#33BFD7',
+          500: '#5DBBCD',  // Turquesa del diseño
+          600: '#4A96A4',
+          700: '#38717B',
+          800: '#254C52',
+          900: '#132629',
+        },
+      },
+      backgroundImage: {
+        'hero-gradient': 'linear-gradient(135deg, #5DBBCD 0%, #1E6BB8 100%)',
       },
     },
   },

@@ -1,20 +1,14 @@
-import { useCart } from './CartContext';
+import { useCart } from './CartStore';
 
 interface CartIconProps {
   onOpenCart: () => void;
 }
 
 /**
- * COMPONENTE: CartIcon
+ * COMPONENTE: CartIcon (Header - Desktop)
  * 
- * ¿Qué hace?
- * - Muestra un icono de carrito con la cantidad de productos
- * - Al hacer clic, abre el modal del carrito
- * 
- * ¿Por qué es un React Island?
- * - Necesita interactividad (click)
- * - Necesita estado global (cantidad de items del carrito)
- * - Se actualiza dinámicamente sin recargar la página
+ * Icono de carrito para el header en desktop
+ * Sin badge (el badge está en el botón flotante móvil)
  */
 export const CartIcon = ({ onOpenCart }: CartIconProps) => {
   const { totalItems } = useCart();
@@ -22,12 +16,12 @@ export const CartIcon = ({ onOpenCart }: CartIconProps) => {
   return (
     <button
       onClick={onOpenCart}
-      className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors"
+      className="relative text-white hover:text-gray-200 transition-colors p-2 rounded-lg hover:bg-primary-600"
       aria-label="Abrir carrito"
     >
       {/* Icono SVG del carrito */}
       <svg
-        className="w-6 h-6 text-gray-700"
+        className="w-6 h-6"
         fill="none"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -38,10 +32,10 @@ export const CartIcon = ({ onOpenCart }: CartIconProps) => {
         <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
       </svg>
       
-      {/* Badge con la cantidad de items */}
+      {/* Badge con la cantidad (solo si hay items) */}
       {totalItems > 0 && (
-        <span className="absolute -top-1 -right-1 bg-primary-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-          {totalItems}
+        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+          {totalItems > 99 ? '99+' : totalItems}
         </span>
       )}
     </button>
