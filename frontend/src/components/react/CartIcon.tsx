@@ -1,4 +1,5 @@
-import { useCart } from './CartStore';
+import { useState, useEffect } from 'react';
+import { cartItems } from './CartStore';
 
 interface CartIconProps {
   onOpenCart: () => void;
@@ -8,10 +9,17 @@ interface CartIconProps {
  * COMPONENTE: CartIcon (Header - Desktop)
  * 
  * Icono de carrito para el header en desktop
- * Sin badge (el badge está en el botón flotante móvil)
+ * Con badge que muestra la cantidad de items
  */
 export const CartIcon = ({ onOpenCart }: CartIconProps) => {
-  const { totalItems } = useCart();
+  const [totalItems, setTotalItems] = useState(0);
+
+  useEffect(() => {
+    const unsubscribe = cartItems.subscribe((items) => {
+      setTotalItems(Object.keys(items).length);
+    });
+    return unsubscribe;
+  }, []);
 
   return (
     <button
@@ -23,9 +31,9 @@ export const CartIcon = ({ onOpenCart }: CartIconProps) => {
       <svg
         className="w-6 h-6"
         fill="none"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
         viewBox="0 0 24 24"
         stroke="currentColor"
       >

@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { useCart } from './CartStore';
+import { useState, useEffect } from 'react';
+import { cartItems, isCartOpen } from './CartStore';
 
 interface FloatingButtonsProps {
-  onOpenCart: () => void;
+  onOpenCart?: () => void;
 }
 
 /**
@@ -13,8 +13,19 @@ interface FloatingButtonsProps {
  * - Carrito (azul) - solo en móvil
  */
 export const FloatingButtons = ({ onOpenCart }: FloatingButtonsProps) => {
-  const { totalItems } = useCart();
+  const [totalItems, setTotalItems] = useState(0);
   const whatsappNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER;
+
+  useEffect(() => {
+    // Suscribirse a cambios del carrito
+    const unsubscribe = cartItems.subscribe((items) => {
+      // Sumar las cantidades de todos los items
+      const totalQuantity = Object.values(items).reduce((sum, item) => sum + item.quantity, 0);
+      setTotalItems(totalQuantity);
+    });
+
+    return unsubscribe;
+  }, []);
 
   const handleWhatsApp = () => {
     const message = encodeURIComponent('Hola! Quisiera más información sobre sus productos.');
@@ -37,8 +48,8 @@ export const FloatingButtons = ({ onOpenCart }: FloatingButtonsProps) => {
 
       {/* Botón Carrito (solo móvil) */}
       <button
-        onClick={onOpenCart}
-        className="md:hidden w-14 h-14 bg-primary-500 hover:bg-primary-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 relative"
+        onClick={() => isCartOpen.set(true)}
+        className="w-14 h-14 bg-primary-500 hover:bg-primary-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 relative"
         aria-label="Abrir carrito"
       >
         <svg className="w-7 h-7" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -47,8 +58,8 @@ export const FloatingButtons = ({ onOpenCart }: FloatingButtonsProps) => {
         
         {/* Badge con cantidad */}
         {totalItems > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-            {totalItems}
+          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center animate-pulse">
+            {totalItems > 9 ? '9+' : totalItems}
           </span>
         )}
       </button>

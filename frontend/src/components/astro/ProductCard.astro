@@ -8,7 +8,7 @@ interface Props {
 }
 
 const { product } = Astro.props;
-const { name, price, slug, image } = product;
+const { name, price, slug, description, image } = product;
 const imageUrl = getStrapiMedia(image?.[0]?.url);
 
 // Preparar datos para el botón de añadir al carrito
@@ -17,6 +17,7 @@ const cartItem = {
   name,
   price,
   slug,
+  description,
   image: imageUrl,
 };
 ---
@@ -63,8 +64,12 @@ const cartItem = {
       </h3>
     </a>
 
-    <p class="text-gray-500 text-xs mb-3 line-clamp-1">
-      Sigue evolucionando e...
+    <p class="text-gray-500 text-xs mb-3 h-6 overflow-hidden">
+      {
+        description && description.length > 80
+          ? description.substring(0, 70) + "..."
+          : description
+      }
     </p>
 
     <!-- Precios -->

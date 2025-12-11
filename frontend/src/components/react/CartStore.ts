@@ -9,17 +9,18 @@ export const cartItems = map<Record<string, CartItem>>({});
 
 // --- ACCIONES ---
 
-export function addCartItem(product: Omit<CartItem, 'quantity'>) {
-  const existingEntry = cartItems.get()[product.id];
+export function addCartItem(product: Omit<CartItem, 'quantity'>, quantity: number = 1) {
+  const productKey = String(product.id);
+  const existingEntry = cartItems.get()[productKey];
   if (existingEntry) {
-    cartItems.setKey(product.id, {
+    cartItems.setKey(productKey, {
       ...existingEntry,
-      quantity: existingEntry.quantity + 1,
+      quantity: existingEntry.quantity + quantity,
     });
   } else {
-    cartItems.setKey(product.id, {
+    cartItems.setKey(productKey, {
       ...product,
-      quantity: 1,
+      quantity,
     });
   }
 }

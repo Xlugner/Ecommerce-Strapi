@@ -2,6 +2,8 @@
 import "../styles/global.css";
 import Footer from "../components/astro/Footer.astro";
 import Header from "../components/astro/Header.astro";
+import { FloatingButtons } from "../components/react/FloatingButton";
+import { CartWrapper } from "../components/react/CartWrapper";
 import { getStoreConfig } from "../lib/strapi";
 
 interface Props {
@@ -35,5 +37,11 @@ const storeName =
 
     <!-- Footer -->
     <Footer />
+
+    <!-- Carrito Modal -->
+    <CartWrapper client:load />
+
+    <!-- Botones Flotantes -->
+    <FloatingButtons client:load />
   </body>
 </html>

@@ -1,29 +1,20 @@
-import { useStore } from '@nanostores/react';
+import { useEffect, useState } from 'react';
 import { isCartOpen } from '../react/CartStore';
 import { Cart } from './Cart';
 
-// Mock del CartIcon (o puedes importarlo si ya tienes el archivo)
-const CartIcon = ({ onOpenCart }: { onOpenCart: () => void }) => (
-  <button 
-    onClick={onOpenCart} 
-    className="fixed bottom-4 right-4 z-40 bg-white p-4 rounded-full shadow-xl hover:scale-105 transition-transform"
-  >
-    <div className="relative">
-      <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-      </svg>
-    </div>
-  </button>
-);
-
 export const CartWrapper = () => {
-  // Suscribirse al estado global
-  const $isCartOpen = useStore(isCartOpen);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = isCartOpen.subscribe((value) => {
+      setOpen(value);
+    });
+    return unsubscribe;
+  }, []);
 
   return (
     <>
-        <CartIcon onOpenCart={() => isCartOpen.set(true)} />
-        <Cart isOpen={$isCartOpen} onClose={() => isCartOpen.set(false)} />
+      <Cart isOpen={open} onClose={() => isCartOpen.set(false)} />
     </>
   );
 };
