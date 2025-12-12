@@ -117,6 +117,16 @@ export async function getCategories(): Promise<Category[]> {
 }
 
 /**
+ * Obtiene una categoría por slug
+ */
+export async function getCategoryBySlug(slug: string): Promise<Category | null> {
+  const data = await fetchFromStrapi('/api/categories', {
+    'filters[slug][$eq]': slug,
+  });
+  return data?.data?.[0] || null;
+}
+
+/**
  * Obtiene productos por categoría
  */
 export async function getProductsByCategory(categorySlug: string): Promise<Product[]> {

@@ -1,5 +1,15 @@
 import { useState } from 'react';
 
+interface Category {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+interface Props {
+  categories: Category[];
+}
+
 /**
  * COMPONENTE: MobileMenu
  * 

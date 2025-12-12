@@ -1,0 +1,65 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getProducts, getCategories } from "../lib/strapi";
+import ProductCard from "../components/astro/ProductCard.astro";
+import CategoryCarousel from "../components/astro/CategoryCarousel.astro";
+
+const products = await getProducts();
+const categories = await getCategories();
+---
+
+<Layout title="Productos">
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold text-gray-800 mb-8">Nuestros Productos</h1>
+
+    <CategoryCarousel categories={categories} />
+
+    <div
+      id="product-list"
+      class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+    >
+      {
+        products.map((product) => (
+          <div
+            class="product-item"
+            data-category={product.category?.slug || ""}
+          >
+            <ProductCard product={product} />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</Layout>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const filterButtons = document.querySelectorAll(".category-filter");
+    const productItems = document.querySelectorAll(
+      ".product-item"
+    ) as NodeListOf<HTMLElement>;
+
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const slug = button.getAttribute("data-slug");
+
+        // Estilos de los botones
+        filterButtons.forEach((btn) => {
+          btn.classList.remove("bg-primary-500", "text-white");
+          btn.classList.add("bg-white", "text-gray-700");
+        });
+        button.classList.add("bg-primary-500", "text-white");
+        button.classList.remove("bg-white", "text-gray-700");
+
+        // Filtrado de productos
+        productItems.forEach((item) => {
+          if (slug === "all" || item.getAttribute("data-category") === slug) {
+            item.style.display = "block";
+          } else {
+            item.style.display = "none";
+          }
+        });
+      });
+    });
+  });
+</script>
